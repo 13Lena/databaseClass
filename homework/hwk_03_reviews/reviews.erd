@@ -1,0 +1,52 @@
+// CS3810: Principles of Database Systems
+// Instructor: Thyago Mota
+// Student: Lena Hamilton
+// Description: An ERD for a Paper Reviewing System
+
+erdiagram reviews
+notation=crowsfoot
+
+entity Papers  { 
+    id_num key
+    title
+    abstract
+    file_name
+    contact
+}
+
+entity Authors { 
+    email key
+    first_name
+    last_name
+}
+
+entity Reviewers { 
+    email key
+    first_name
+    last_name
+    phone_num
+    affiliation
+    intrests
+}
+
+weak entity Reviews { 
+    recommend partial-key
+    technical_merit
+    readablity
+    originality
+    relevence
+    committee_comments
+    author_comments
+}
+
+relationship write {
+    Authors [1..N] -> Papers [0..N]
+}
+
+relationship evaluated_by {
+    Papers [0..N] -> Reviewers [N | "2 to 4 reviewers"]
+}
+
+weak relationship make {
+    Reviews [0..N] -> Reviewers [1]
+}
