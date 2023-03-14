@@ -1,0 +1,1 @@
+docker run --rm --name postgres -e POSTGRES_PASSWORD=135791 -v /home/lena/Desktop/Spring\ 2023/Principles\ of\ Database\ Systems/postgress:/var/lib/postgresql/data postgres
