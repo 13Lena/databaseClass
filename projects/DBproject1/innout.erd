@@ -12,15 +12,6 @@ entity Customers {
     gender
 }
 
-entity Sales {
-    cutomer_id key
-    item_code key
-    date
-    time
-    quantity
-    price
-}
-
 entity Items {
     code key
     description
@@ -28,8 +19,17 @@ entity Items {
 }
 
 weak entity Categories {
-    cat_code partial-key
+    code partial-key
     description
+}
+
+entity Sales {
+    cutomer_id key
+    item_code key
+    date
+    time
+    quantity
+    price
 }
 
 relationship buy {
