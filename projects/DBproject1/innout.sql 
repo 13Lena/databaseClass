@@ -10,6 +10,10 @@ CREATE DATABASE innout;
 \c innout
 
 -- TODO: table create statements
+CREATE TABLE Customers (
+    id_num SERIAL PRIMARY key
+    
+)
 
 -- TODO: table insert statements
 
