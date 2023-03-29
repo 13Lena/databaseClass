@@ -1,6 +1,6 @@
 -- CS3810: Principles of Database Systems
 -- Instructor: Thyago Mota
--- Student(s): Lena Hamilton
+-- Student: Lena Hamilton
 -- Description: Star Wars Database (SQL Competition)
 
 CREATE DATABASE starwars;
@@ -153,20 +153,7 @@ INSERT INTO FilmRatings VALUES (6716,1,2), (6716,2,5), (29200,2,4), (29200,4,5),
 (20926,5,4), (86106,1,5), (86106,2,1), (86106,3,2), (86106,4,4), (67540,1,1), (67540,3,1), (67540,5,2), (89752,2,3), (89752,5,5), (91225,1,5), (91225,2,5), (91225,3,2), (91225,4,5), (82754,1,5), (82754,2,1), (82754,4,1), (82754,5,4), (23210,1,3), (23210,2,2), (23210,3,1), (23210,5,2), (66,1,1), (66,2,5), (66,3,5), (66,4,4), (41450,1,5), (41450,2,4), (41450,3,1), (41450,4,3), (41450,5,3), (19544,3,3), (19544,4,3), (19544,5,2), (14905,1,2), (14905,2,1), (14905,3,3), (14905,4,5), (14905,5,5), (747,1,4), (747,3,5), (747,4,4), (747,5,5), (32803,1,4), (32803,3,5), (32803,4,2), (32803,5,1), (98863,1,2), (98863,2,1), (98863,4,1), (98863,5,1), (97902,1,3), (97902,2,2), (97902,3,5), (78113,1,4), (78113,2,4), (78113,3,1), (78113,4,5), (78113,5,5), (47624,1,5), (47624,2,1), (47624,3,1), (47624,4,2), (19817,1,3), (19817,2,2), (19817,3,5), (19817,4,5), (17093,2,4), (17093,3,2), (17093,4,4), (17093,5,4), (3130,1,2), (3130,2,2), (3130,3,3), (3130,4,2), (64819,1,4), (64819,3,5), (64819,5,2), (99687,1,3), (99687,3,4), (99687,4,2), (99687,5,5), (3066,1,2), (3066,2,1), (3066,3,3), (3066,4,1), (3066,5,5), (82709,2,3), (82709,4,4), (82709,5,2), (83797,1,4), (83797,2,4), (83797,3,4), (83797,4,3), (42667,1,5), (42667,3,5), (42667,4,2), (32765,1,4), (32765,4,1), (32765,5,4), 
 (76634,1,4), (76634,2,2), (76634,3,3), (76634,4,2), (76634,5,3), (47673,1,4), (47673,2,2), (47673,3,4), (47673,4,1), (47673,5,4), (62217,1,2), (62217,3,1), (62217,4,1), (62217,5,5), (68276,1,2), (68276,2,3), (68276,3,1), (68276,4,5), (68276,5,3);
 
--- a) the number of star wars films
-SELECT COUNT(*) FROM Films;
-
--- b) the age group (description) that has the most fans
-SELECT 
--- c) the education level (description) with the least number of fans
-SELECT 
--- d) the name of the star wars characters in alphabetical order
-SELECT CONTACT AS name FROM Characters ORDER BY 1;
--- e) the star wars characters that have no fan ratings 
-
--- f) the top 3 star wars characters based on fan ratings, showing their names and the average rating (rounded to 2 decimals) that they received 
-
--- g) The ids of the fans that gave a rating of 1 for "Darth Vader", in ascending order, so that they be banned from future star wars views
+-- TODO: answer a minimum of 5 of the 7 questions below; you can get up to 7 points in this homework if you get ALL queries right
 
 -- h) the top rated star wars film by the fans 
 
@@ -181,5 +168,3 @@ SELECT CONTACT AS name FROM Characters ORDER BY 1;
 -- n) the favorite character according the yongest fan audience
 
 -- o) the income levels (descriptions) that has at least 100 fans, ordered by income sequential number
-
-
