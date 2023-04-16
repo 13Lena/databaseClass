@@ -28,10 +28,15 @@ CREATE TABLE Classifications (
 );
 
 CREATE TABLE Costs (
+    CNN VARCHAR(6),
+    Dignosis_Code VARCHAR(10),
     Tot_Dschrgs INT,
     Avg_Submtd_Cvrd_Chrg NUMERIC(10, 2),
     Avg_Tot_Pymt_Amt NUMERIC(10, 2),
-    Avg_Mdcr_Pymt_Amt NUMERIC(10, 2)
+    Avg_Mdcr_Pymt_Amt NUMERIC(10, 2),
+    FOREIGN KEY(CNN) REFERENCES Providers(Rndrng_Prvdr_CCN),
+    FOREIGN KEY(Dignosis_Code) REFERENCES Classifications(DRG_Cd),
+    PRIMARY KEY(CNN, Dignosis_Code)
 );
 
 -- create user with appropriate access to the tables
@@ -41,25 +46,24 @@ GRANT ALL PRIVILEGES ON DATABASE ipps TO ipps;
 -- queries
 
 -- a) List all diagnosis in alphabetical order.
-SELECT
-FROM
-WHERE
-ORDER BY 
+SELECT DISTINCT DRG_Desc AS diagnosis
+FROM Classifications
+ORDER BY diagnosis ACS;
 
 -- b) List the names and correspondent states (including Washington D.C.) of all of the providers in alphabetical order (state first, provider name next, no repetition).
-SELECT
-FROM
-WHERE
+SELECT Rndrng_Prvdr_State_Abrvtn AS state, DISTINCT Rndrng_Prvdr_Org_Name AS provider_name
+FROM Providers
+ORDER BY provider_name ASC;
 
 -- c) List the total number of providers.
 SELECT COUNT(DISTINCT Rndrng_Prvdr_Org_Name)
 FROM Providers;
 
 -- d) List the total number of providers per state (including Washington D.C.) in alphabetical order (also printing out the state).
-SELECT
-FROM
-WHERE
-GROUP BY
+SELECT Rndrng_Prvdr_State_Abrvtn, COUNT(*)
+FROM Providers
+GROUP BY Rndrng_Prvdr_State_Abrvtn
+ORDER BY Rndrng_Prvdr_State_Abrvtn ASC;
 
 -- e) List the providers names in Denver (CO) or in Lakewood (CO) in alphabetical order
 SELECT Rndrng_Prvdr_Org_Name AS name
@@ -69,27 +73,30 @@ WHERE (Rndrng_Prvdr_City = 'Denver' OR Rndrng_Prvdr_City = 'Lakewood')
 ORDER BY Rndrng_Prvdr_Org_Name ASC;
 
 -- f) List the number of providers per RUCA code (showing the code and description)
-SELECT COUNT()
-FROM
-WHERE
-GROUP BY 
+SELECT Rndrng_Prvdr_RUCA, Rndrng_Prvdr_RUCA_Desc, COUNT(*)
+FROM Providers
+GROUP BY Rndrng_Prvdr_RUCA, Rndrng_Prvdr_RUCA_Desc;
 
 -- g) Show the DRG description for code 308
 SELECT DRG_Desc AS 308_description
 FROM Classifications
-WHERE DRG_Cd = '308'
+WHERE DRG_Cd = '308';
 
 -- h) List the top 10 providers (with their correspondent state) that charged (as described in Avg_Submtd_Cvrd_Chrg) the most for the DRG code 308. Output should display the provider name, their city, state, and the average charged amount in descending order.
-SELECT
-FROM
-WHERE
+SELECT Providers.Rndrng_Prvdr_Org_Name, Providers.Rndrng_Prvdr_City, Providers.Rndrng_Prvdr_State_Abrvtn, Costs.Avg_Submtd_Cvrd_Chrg
+FROM Providers
+INNER JOIN Costs ON Providers.Rndrng_Prvdr_CCN = Costs.CNN
+WHERE Costs.Dignosis_Code = '308'
+ORDER BY Costs.Avg_Submtd_Cvrd_Chrg DESC LIMIT 10;
 
 -- i) List the average charges (as described in Avg_Submtd_Cvrd_Chrg) of all providers per state for the DRG code 308. Output should display the state and the average charged amount per state in descending order (of the charged amount) using only two decimals.
-SELECT
-FROM
-WHERE
+SELECT Rndrng_Prvdr_State_Abrvtn, AS state, ROUND(AVG(Avg_Submtd_Cvrd_Chrg)::numeric, 2) AS aveerage_charges
+FROM ipps_data
+WHERE DRG_Cd = '308'
+GROUP BY Rndrng_Prvdr_State_Abrvtn
+ORDER BY aveerage_charges DESC;
 
 -- j) Which provider and clinical condition pair had the highest difference between the amount charged (as described in Avg_Submtd_Cvrd_Chrg) and the amount covered by Medicare only (as described in Avg_Mdcr_Pymt_Amt)?
-SELECT
-FROM
-WHERE
+SELECT Rndrng_Prvdr_Org_Name, DRG_Desc, (Avg_Submtd_Cvrd_Chrg - Avg_Mdcr_Pymt_Amt) AS difference
+FROM ipps_data
+ORDER BY difference DESC LIMIT 1;
