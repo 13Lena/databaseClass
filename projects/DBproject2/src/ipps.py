@@ -16,7 +16,7 @@ params = dict(config.items('db'))
 with open('../data/MUP_IHP_RY22_P02_V10_DY20_PrvSvc.csv') as csvfile:
     with psycopg2.connect(**params) as conn:
         print('Connection to Postgres database ' +
-              params['dbname'] + ' was successful!')
+            params['dbname'] + ' was successful!')
         spamreader = csv.reader(csvfile, delimiter=',', quotechar='"')
         next(spamreader)
         with conn.cursor() as cur:
