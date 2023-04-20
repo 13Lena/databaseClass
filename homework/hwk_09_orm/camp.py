@@ -1,7 +1,7 @@
 """
 CS3810: Principles of Database Systems
 Instructor: Thyago Mota
-Student: 
+Student: Lena Hamilton
 Description: ORM script to show campers in a given program
 """
 

@@ -85,7 +85,6 @@ INSERT INTO guardians VALUES
     ('dione@god.com', 'Dione'), 
     ('sky@god.com', 'Sky');
 
--- TODO: create a table to represent the relationship between campers and guardians
 CREATE TABLE guardian_campers (
     seq SERIAL PRIMARY KEY, 
     guardian VARCHAR(50), 
