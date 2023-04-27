@@ -18,13 +18,13 @@ This class represents a camper entity
 '''
 class Camper(Base): 
     # TODO #1 complete the mapping of class Camper and table campers
-    '''
-    __tablename__ = ...
-    id     = ...
-    name   = ...
-    dob    = ...
-    gender = ...
-    '''
+
+    __tablename__ = 'campers'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(50), nullable=False)
+    dob = Column(Date, nullable=False)
+    gender = Column(String(10))
+    cabin = Column(String(50), ForeignKey('cabins.name'))
     
     # programs will allow the retrieval of all programs that a camper is in via the intermediate table "participates"
     programs = relationship("Program", secondary="participates")
@@ -40,23 +40,21 @@ This class represents the intermediate table between campers and programs
 '''
 class Participate(Base):
     # TODO #2 complete the mapping of class Participate and table participates
-    '''
-    __tablename__ = ...
-    program = Column(..., ForeignKey(...), primary_key=True) 
-    camper = Column(..., ForeignKey(...), primary_key=True)
-    '''
+
+    __tablename__ = 'participates'
+    program = Column(String(50), ForeignKey('programs.name'), primary_key=True)
+    camper = Column(Integer, ForeignKey('campers.id'), primary_key=True)
 
 '''
 This class represents a program entity
 '''
 class Program(Base):
     # TODO #3 complete the mapping of class Program and table programs
-    '''
-    __tablename__ = ...
-    name = Column(..., primary_key=True) 
-    descr = Column(...)
-    price = Column(...)
-    '''
+
+    __tablename__ = 'programs'
+    name = Column(String(50), primary_key=True)
+    descr = Column(String(200), nullable=False)
+    price = Column(Double)
 
     # campers will allow the retrieval of all campers that are enrolled in a program via the intermediate table "participates"
     campers = relationship("Camper", secondary="participates", back_populates="programs")
