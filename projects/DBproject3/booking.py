@@ -8,15 +8,18 @@ Description: A room reservation system
 import psycopg2
 from psycopg2 import extensions, errors
 import configparser as cp
-from datetime import datetime
 
-def menu(): 
+
+def menu():
+    """List user menu."""
     print('1. List')
     print('2. Reserve')
     print('3. Delete')
     print('4. Quit')
 
+
 def db_connect():
+    """Open start configs, and list prepared statements."""
     config = cp.RawConfigParser()
     config.read('ConfigFile.properties')
     params = dict(config.items('db'))
@@ -49,17 +52,21 @@ def db_connect():
         ''')
     return conn
 
-# TODO: display all reservations in the system using the information from ReservationsView
+
+# TODO: display all reservations using information from ReservationsView
 def list_op(conn):
+    """Display all reservations using ReservationsView."""
     with conn.cursor() as cur:
         cur.execute("SELECT * FROM ReservationsView;")
         rows = cur.fetchall()
         for row in rows:
             code, date, period, start, end, building, room, user = row
-            print(f"{code},{date},{period},{start},{end},{building}-{room},{user}")
 
-# TODO: reserve a room on a specific date and period, also saving the user who the reservation is for
-def reserve_op(conn): 
+
+# TODO: reserve a room on a specific date and period
+# TODO: also saving the user who the reservation is for
+def reserve_op(conn):
+    """Reserve room function."""
     with conn.cursor() as cur:
         date = input("Date (YYYY-MM-DD): ")
         period = input("Period (A-H): ")
@@ -68,22 +75,27 @@ def reserve_op(conn):
         user = input("User: ")
         try:
             conn.set_isolation_level(extensions.ISOLATION_LEVEL_SERIALIZABLE)
-            cur.execute("EXECUTE QueryReservationExists (%s, %s, %s, %s);", (building, room, date, period))
+            cur.execute("EXECUTE QueryReservationExists (%s, %s, %s, %s);",
+                        (building, room, date, period))
             if cur.fetchone() is not None:
                 conn.rollback()
                 print("Room not available.")
                 return
-            cur.execute("EXECUTE NewReservation (%s, %s, %s, %s);", (building, room, date, period))
+            cur.execute("EXECUTE NewReservation (%s, %s, %s, %s);",
+                        (building, room, date, period))
             conn.commit()
-            cur.execute("EXECUTE UpdateReservationUser (%s, %s, %s, %s, %s);", (user, building, room, date, period))
+            cur.execute("EXECUTE UpdateReservationUser (%s, %s, %s, %s, %s);",
+                        (user, building, room, date, period))
             conn.commit()
             print("Reservation successful.")
         except errors.DeadlockDetected:
             conn.rollback()
             print("Reservation could not be secured.")
 
+
 # TODO: delete a reservation given its code
 def delete_op(conn):
+    """Delete reservation function."""
     with conn.cursor() as cur:
         code = input("Reservation code: ")
         try:
@@ -98,10 +110,11 @@ def delete_op(conn):
             conn.rollback()
             print("Reservation could not be deleted.")
 
+
 if __name__ == "__main__":
-    with db_connect() as conn: 
+    with db_connect() as conn:
         op = 0
-        while op != 4: 
+        while op != 4:
             menu()
             op = int(input('? '))
             if op == 1: 

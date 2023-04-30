@@ -21,11 +21,20 @@ with open('../data/MUP_IHP_RY22_P02_V10_DY20_PrvSvc.csv') as csvfile:
         next(spamreader)
         with conn.cursor() as cur:
             cur.execute("""
-                PREPARE i1 AS INSERT INTO Providers(Rndrng_Prvdr_CCN, Rndrng_Prvdr_Org_Name, Rndrng_Prvdr_St, Rndrng_Prvdr_City, Rndrng_Prvdr_State_Abrvtn, Rndrng_Prvdr_State_FIPS, Rndrng_Prvdr_Zip5, Rndrng_Prvdr_RUCA, Rndrng_Prvdr_RUCA_Desc) VALUES ($1, $2, $3, $4, $5, $6,$7, $8, $9) ON CONFLICT DO NOTHING;
+                PREPARE i1 AS INSERT INTO Providers(Rndrng_Prvdr_CCN,
+                Rndrng_Prvdr_Org_Name, Rndrng_Prvdr_St, Rndrng_Prvdr_City,
+                Rndrng_Prvdr_State_Abrvtn, Rndrng_Prvdr_State_FIPS,
+                Rndrng_Prvdr_Zip5, Rndrng_Prvdr_RUCA, Rndrng_Prvdr_RUCA_Desc)
+                VALUES ($1, $2, $3, $4, $5, $6,$7, $8, $9)
+                ON CONFLICT DO NOTHING;
 
-                PREPARE i2 AS INSERT INTO Classifications(DRG_Cd, DRG_Desc) VALUES ($1, $2) ON CONFLICT DO NOTHING;
+                PREPARE i2 AS INSERT INTO Classifications(DRG_Cd, DRG_Desc)
+                VALUES ($1, $2) ON CONFLICT DO NOTHING;
 
-                PREPARE i3 AS INSERT INTO Costs(CnN, Dignosis_Code, Tot_Dschrgs, Avg_Submtd_Cvrd_Chrg, Avg_Tot_Pymt_Amt, Avg_Mdcr_Pymt_Amt) VALUES ($1, $2, $3, $4, $5, $6) ON CONFLICT DO NOTHING;
+                PREPARE i3 AS INSERT INTO Costs(CnN, Dignosis_Code,
+                Tot_Dschrgs, Avg_Submtd_Cvrd_Chrg, Avg_Tot_Pymt_Amt,
+                Avg_Mdcr_Pymt_Amt)
+                VALUES ($1, $2, $3, $4, $5, $6) ON CONFLICT DO NOTHING;
             """)
             for row in spamreader:
                 cur.execute(              
