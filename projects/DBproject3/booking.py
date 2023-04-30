@@ -51,15 +51,52 @@ def db_connect():
 
 # TODO: display all reservations in the system using the information from ReservationsView
 def list_op(conn):
-    pass
+    with conn.cursor() as cur:
+        cur.execute("SELECT * FROM ReservationsView;")
+        rows = cur.fetchall()
+        for row in rows:
+            code, date, period, start, end, building, room, user = row
+            print(f"{code},{date},{period},{start},{end},{building}-{room},{user}")
 
-# TODO: reserve a room on a specific date and period, also saving the user who's the reservation is for
+# TODO: reserve a room on a specific date and period, also saving the user who the reservation is for
 def reserve_op(conn): 
-    pass
+    with conn.cursor() as cur:
+        date = input("Date (YYYY-MM-DD): ")
+        period = input("Period (A-H): ")
+        building = input("Building: ")
+        room = input("Room: ")
+        user = input("User: ")
+        try:
+            conn.set_isolation_level(extensions.ISOLATION_LEVEL_SERIALIZABLE)
+            cur.execute("EXECUTE QueryReservationExists (%s, %s, %s, %s);", (building, room, date, period))
+            if cur.fetchone() is not None:
+                conn.rollback()
+                print("Room not available.")
+                return
+            cur.execute("EXECUTE NewReservation (%s, %s, %s, %s);", (building, room, date, period))
+            conn.commit()
+            cur.execute("EXECUTE UpdateReservationUser (%s, %s, %s, %s, %s);", (user, building, room, date, period))
+            conn.commit()
+            print("Reservation successful.")
+        except errors.DeadlockDetected:
+            conn.rollback()
+            print("Reservation could not be secured.")
 
 # TODO: delete a reservation given its code
 def delete_op(conn):
-    pass
+    with conn.cursor() as cur:
+        code = input("Reservation code: ")
+        try:
+            cur.execute("EXECUTE QueryReservationExistsByCode (%s);", (code,))
+            if cur.fetchone() is None:
+                print("No reservation exists.")
+                return
+            cur.execute("EXECUTE DeleteReservation (%s);", (code,))
+            conn.commit()
+            print("Reservation deleted.")
+        except:
+            conn.rollback()
+            print("Reservation could not be deleted.")
 
 if __name__ == "__main__":
     with db_connect() as conn: 

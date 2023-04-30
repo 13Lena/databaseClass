@@ -87,5 +87,13 @@ GRANT ALL ON SEQUENCE users_user_seq TO booking;
 --     2 | 2023-06-12 | D      | 12:00:00 | 14:00:00 | AES-210 | Sam Mai Tai
 --     1 | 2023-05-15 | C      | 10:00:00 | 12:00:00 | AES-210 | Sam Mai Tai
 
+CREATE VIEW ReservationsView AS
+SELECT Reservations.code, Reservations.date, Reservations.period, Periods.start, Periods."end", CONCAT(Rooms.abbr, '-', Rooms.room) AS room, Users.name
+FROM Reservations
+INNER JOIN Periods ON Reservations.period = Periods.period
+INNER JOIN Rooms ON Reservations.abbr = Rooms.abbr AND Reservations.room = Rooms.room
+INNER JOIN Users ON Reservations."user" = Users."user"
+ORDER BY Reservations.date ASC, Periods.start ASC;
+
 -- once your view is created and working, run the following line
 GRANT ALL ON TABLE ReservationsView TO booking;
