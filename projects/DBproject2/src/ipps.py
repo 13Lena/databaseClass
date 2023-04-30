@@ -37,7 +37,7 @@ with open('../data/MUP_IHP_RY22_P02_V10_DY20_PrvSvc.csv') as csvfile:
                 VALUES ($1, $2, $3, $4, $5, $6) ON CONFLICT DO NOTHING;
             """)
             for row in spamreader:
-                cur.execute(              
+                cur.execute(
                     "EXECUTE i1(%s, %s, %s, %s, %s, %s, %s, %s, %s)",
                     (
                         float(row[0]),

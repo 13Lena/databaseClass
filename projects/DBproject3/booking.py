@@ -24,30 +24,30 @@ def db_connect():
     config.read('ConfigFile.properties')
     params = dict(config.items('db'))
     conn = psycopg2.connect(**params)
-    conn.autocommit = False 
-    with conn.cursor() as cur: 
+    conn.autocommit = False
+    with conn.cursor() as cur:
         cur.execute('''
-            PREPARE QueryReservationExists AS 
-                SELECT * FROM Reservations 
+            PREPARE QueryReservationExists AS
+                SELECT * FROM Reservations
                 WHERE abbr = $1 AND room = $2 AND date = $3 AND period = $4;
         ''')
         cur.execute('''
-            PREPARE QueryReservationExistsByCode AS 
-                SELECT * FROM Reservations 
+            PREPARE QueryReservationExistsByCode AS
+                SELECT * FROM Reservations
                 WHERE code = $1;
         ''')
         cur.execute('''
-            PREPARE NewReservation AS 
+            PREPARE NewReservation AS
                 INSERT INTO Reservations (abbr, room, date, period) VALUES
                 ($1, $2, $3, $4);
         ''')
         cur.execute('''
-            PREPARE UpdateReservationUser AS 
+            PREPARE UpdateReservationUser AS
                 UPDATE Reservations SET "user" = $1
-                WHERE abbr = $2 AND room = $3 AND date = $4 AND period = $5; 
+                WHERE abbr = $2 AND room = $3 AND date = $4 AND period = $5;
         ''')
         cur.execute('''
-            PREPARE DeleteReservation AS 
+            PREPARE DeleteReservation AS
                 DELETE FROM Reservations WHERE code = $1;
         ''')
     return conn
@@ -117,7 +117,7 @@ if __name__ == "__main__":
         while op != 4:
             menu()
             op = int(input('? '))
-            if op == 1: 
+            if op == 1:
                 list_op(conn)
             elif op == 2:
                 reserve_op(conn)
