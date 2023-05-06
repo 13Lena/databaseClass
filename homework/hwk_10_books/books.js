@@ -1,10 +1,7 @@
-
- 
-
 // CS 3810: Principles of Database Systems
 // Homework 10: The books database
 // Instructor: Thyago Mota
-// Student: 
+// Student: Lena Hamilton
 
 // db creation
 use books;
@@ -55,13 +52,68 @@ db.books.insertOne({
 });
 
 // list all books titles only (excluding _id)
+db.books.find(
+    {
+        _id: 0, 'title': 1
+    }
+)
 
 // list all books written by 'Kyle Banker
+db.books.find(
+    {
+        author: 'Kyle Banker'
+    }
+)
 
 // list all books published in 2011
+db.books.find(
+    {
+        'date.year': 2011
+    }
+)
 
 // list the number of books per year sorted by year
+db.books.aggregate(
+    [
+        { 
+            $group: {
+                _id: "$date.year",
+                count: { 
+                    $sum: 1 
+                }
+            }
+        },
+        { 
+            $sort: { 
+                _id: 1 
+            } 
+        }
+    ]
+)
 
 // list all books that have more than 100 pages but less than 500 pages
+db.books.find(
+    { 
+        pages: { 
+            $gt: 100, 
+            $lt: 500 
+        } 
+    }
+)
 
 // bonus: list the average number of pages of books per gender 
+db.books.aggregate(
+    [
+        { 
+            $unwind: "$genres" 
+        },
+        { 
+            $group: {
+                _id: "$genres",
+                avgPages: { 
+                    $avg: "$pages" 
+                }
+            } 
+        }
+    ]
+)
